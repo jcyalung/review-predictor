@@ -1,0 +1,5 @@
+__pycache__
+*.db
+imdb.py
+curl.py
+aclImdb
