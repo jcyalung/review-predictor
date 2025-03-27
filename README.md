@@ -5,4 +5,17 @@ models are trained from this [dataset](https://ai.stanford.edu/~amaas/data/senti
 
 ## running the code
 
-navigate to the frontend
+to run the backend,
+run these two commands: <br>
+```
+cd backend
+python server.py --reload=[RELOAD] --db=[NAME]
+
+usage: server.py [-h] [--host HOST] [--port PORT] --reload RELOAD [--verbose] --db_name DB_NAME
+```
+
+to run the front end, run these commands: <br>
+```
+cd frontend
+npm run dev
+```

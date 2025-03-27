@@ -3,15 +3,13 @@ import re                               # regex
 import requests
 from bs4 import BeautifulSoup
 
-
-TRAINING_PATH = '/Users/jcyalung/Documents/review-predictor/backend/aclImdb/train'
-TESTING_PATH = '/Users/jcyalung/Documents/review-predictor/backend/aclImdb/test'
 IMDB = r'^https:\/\/www\.imdb\.com\/.*$'
 
 MOVIE_LINK = 'https://www.imdb.com/review/rw10325949/?ref_=tt_ururv_perm'
 EPISODE_LINK = 'https://www.imdb.com/review/rw7363919/?ref_=tt_ururv_perm'
 TV_LINK = 'https://www.imdb.com/review/rw8266882/?ref_=tt_ururv_perm'
 NEUTRAL_LINK = 'https://www.imdb.com/review/rw10324876/?ref_=tt_ururv_perm'
+RATINGLESS_LINK = 'https://www.imdb.com/review/rw0299483/?ref_=tturv_perm_4'
 
 def clean_html(review) -> str:
     review = review.replace('\n', ' ')
@@ -44,7 +42,7 @@ def get_review(url) -> tuple | None:
         # rating html
         rating_html = soup.find_all('span', class_='rating-other-user-rating')
         if len(rating_html) == 0:
-            raise Exception("Invalid link.")
+            raise Exception("Missing rating!")
         score = int(rating_html[0].find_all('span')[0].text)
         review = soup.find_all('div', class_='text show-more__control')[0].text
         review = clean_html(review)
@@ -64,49 +62,7 @@ def get_words(review : str):
 
     words = review.strip().lower().split()
 
-    # Remove the word 'br' explicitly
+    # remove the word 'br' explicitly
     words = [word for word in words if word != 'br']
     
     return words
-
-# just needs to be run once
-# migrated to sqlite database
-def get_data():
-    data = []
-    
-    train_folder_neg = TRAINING_PATH + '/neg'
-    train_folder_pos = TRAINING_PATH + '/pos'
-    
-    test_folder_neg = TESTING_PATH + '/neg'
-    test_folder_pos = TESTING_PATH + '/pos'
-    # add all training reviews to our train_data array
-    for positive_path, negative_path in zip(os.listdir(train_folder_pos), os.listdir(train_folder_neg)):
-        with \
-        open(os.path.join(train_folder_pos, positive_path), 'r') as positive_file, \
-        open(os.path.join(train_folder_neg, negative_path), 'r') as negative_file:
-            pos_review = positive_file.read().strip()
-            pos_review = clean_html(pos_review)
-            neg_review = negative_file.read().strip()
-            neg_review = clean_html(neg_review)
-            data.append((pos_review, 'positive'))
-            data.append((neg_review, 'negative'))
-        
-    # add all negative training reviews to our train_data array
-    for positive_path, negative_path in zip(os.listdir(test_folder_pos), os.listdir(test_folder_neg)):
-        with \
-        open(os.path.join(test_folder_pos, positive_path), 'r') as positive_file, \
-        open(os.path.join(test_folder_neg, negative_path), 'r') as negative_file:
-            pos_review = positive_file.read().strip()
-            pos_review = clean_html(pos_review)
-            neg_review = negative_file.read().strip()
-            neg_review = clean_html(neg_review)
-            
-            data.append((pos_review, 'positive'))
-            data.append((neg_review, 'negative'))
-    
-    # split into labels and reviews
-    reviews, labels = zip(*data)
-    
-    return reviews, labels
-
-get_review('https://www.imdb.com/review/rw10056060/?ref_=tt_ururv_perm')
