@@ -45,6 +45,7 @@ async def predict_review(request : Request):
         raise HTTPException(Code.BAD_REQUEST, detail={"message":"Invalid link."})
     review = review[-2:]
     result, label = learn.predict_review(review=review, model_type=req_json["model"])
+    db.update_prediction(FILE, req_json["url"], result)
     if result is None:
         raise HTTPException(Code.INTERNAL_SERVER_ERROR, detail={"message": "error predicting label"})
     return {'status_code' : Code.OK, 'result': result, 'label' : label }
@@ -68,6 +69,7 @@ async def store_review(url=None):
         raise HTTPException(Code.BAD_REQUEST, detail={"message":"url is required"})
     values = db.get_review(url)
     review_dict = dict(zip(KEYS, values))
+    review_dict['prediction'] = 'unknown'
     if insert_review(FILE, **review_dict):
         return {'status_code' : Code.OK, 'message': 'review stored to database!', 'result':review_dict}
     else:
@@ -83,13 +85,39 @@ async def all_reviews():
             'media_name': media_name,
             'episode_name': episode_name,
             'score': score,
+            'prediction': prediction,
             'review': text,
             'timestamp': timestamp,
             'id': review_id
         }
-        for link, user, media_name, episode_name, score, text, timestamp, review_id in reviews
+        for link, user, media_name, episode_name, score, prediction, text, timestamp, review_id in reviews
     ]
     return {'status_code' : Code.OK, 'reviews':reviews}
+
+@app.get("/recent-reviews")
+async def recent_reviews(count = 5):
+    try:
+        count = int(count)
+    except Exception as e:
+        return HTTPException(Code.BAD_REQUEST, detail={'message' : 'Invalid count'})
+    reviews = list_reviews(FILE)
+    reviews = [
+        {
+            'link': link,
+            'user': user,
+            'media_name': media_name,
+            'episode_name': episode_name,
+            'score': score,
+            'prediction': prediction,
+            'review': text,
+            'timestamp': timestamp,
+            'id': review_id
+        }
+        for link, user, media_name, episode_name, score, prediction, text, timestamp, review_id in reviews
+    ]
+    
+    reviews = sorted(reviews, key=lambda x: x['timestamp'], reverse=True)
+    return {'status_code' : Code.OK, 'count' : count, 'reviews' : reviews[:count]}
     
 @app.get("/logging-levels")
 def logging_levels():
