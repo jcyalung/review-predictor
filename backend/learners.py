@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import dataset as db
-import imdb
+import sqlite_helpers as sql
 import time
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
@@ -18,7 +18,7 @@ NGRAM_RANGE = (1,3)
 SPLIT = 0.8
 
 
-reviews, labels = imdb.reviews_and_labels()
+reviews, labels, _ = zip(*sql.imdb_reviews('imdbReviews.db'))
 train_reviews, test_reviews, train_labels, test_labels = train_test_split(
         reviews, labels, train_size=SPLIT, random_state=42, stratify=labels
     )

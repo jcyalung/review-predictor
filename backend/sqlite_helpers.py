@@ -65,44 +65,6 @@ def retrieve_review(filename, url):
     result = cursor.execute(f'SELECT url, user, media_name, episode_name, score, prediction, review, timestamp, id FROM reviews WHERE url=?',
                             (url,))
     return result.fetchone()
-import sqlite3
-
-def reorder_columns(filename):
-    connection = sqlite3.connect(filename)
-    cursor = connection.cursor()
-
-    try:
-        # Step 1: Create a new table with the desired column order
-        cursor.execute("""
-            CREATE TABLE reviews_new (
-                url varchar(255), 
-                user varchar(33), 
-                media_name varchar(255),
-                episode_name TEXT,
-                score TEXT CHECK(score IN ('positive', 'negative')) NOT NULL,
-                prediction TEXT CHECK(prediction IN ('positive', 'negative', 'unknown')) NOT NULL,         -- moved up here
-                review TEXT NOT NULL,
-                timestamp DATETIME NOT NULL,
-                id INTEGER PRIMARY KEY AUTOINCREMENT
-            )
-        """)
-
-        # Step 2: Copy data over
-        cursor.execute("""
-            INSERT INTO reviews_new (url, user, media_name, episode_name, score, review, prediction, timestamp, id)
-            SELECT url, user, media_name, episode_name, score, review, prediction, timestamp, id FROM reviews
-        """)
-
-        # Step 3 & 4: Drop old table and rename new one
-        cursor.execute("DROP TABLE reviews")
-        cursor.execute("ALTER TABLE reviews_new RENAME TO reviews")
-
-        connection.commit()
-        print("Reordered columns successfully.")
-    except Exception as e:
-        print("Failed to reorder columns:", e)
-    finally:
-        connection.close()
 
 # update prediction after
 def update_prediction(filename, url, prediction):
@@ -124,3 +86,10 @@ def update_prediction(filename, url, prediction):
         return False
     finally:
         connection.close()
+        
+        
+def imdb_reviews(filename):
+    connection = sqlite3.connect(filename)
+    cursor = connection.cursor()
+    result = cursor.execute('SELECT * FROM reviews')
+    return result.fetchall()
