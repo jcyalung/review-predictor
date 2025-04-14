@@ -27,6 +27,18 @@ KEYS = ["url", "user", "media_name", "episode_name", "score", "review"]
 def root():
     return ({ "message" : "hello world!"})
 
+@app.get("/store-review")
+def store_review(url=None):
+    if url is None:
+        raise HTTPException(Code.BAD_REQUEST, detail={"message":"url is required"})
+    values = db.get_review(url)
+    review_dict = dict(zip(KEYS, values))
+    review_dict['prediction'] = 'unknown'
+    if insert_review(FILE, **review_dict):
+        return {'status_code' : Code.OK, 'message': 'review stored to database!', 'result':review_dict}
+    else:
+        raise HTTPException(Code.BAD_REQUEST, detail={'message':'an error occurred.'})
+    
 @app.post("/predict-review")
 async def predict_review(request : Request):
     req_json = await request.json()
@@ -41,11 +53,11 @@ async def predict_review(request : Request):
             review = db.get_review(req_json["url"])
             review_dict = dict(zip(KEYS, review))
             insert_review(FILE, **review_dict)
-    except Exception:
-        raise HTTPException(Code.BAD_REQUEST, detail={"message":"Invalid link."})
+    except Exception as e:
+        raise HTTPException(Code.BAD_REQUEST, detail={"message":e.args})
     review = review[-2:]
     result, label = learn.predict_review(review=review, model_type=req_json["model"])
-    db.update_prediction(FILE, req_json["url"], result)
+    update_prediction(FILE, req_json["url"], result)
     if result is None:
         raise HTTPException(Code.INTERNAL_SERVER_ERROR, detail={"message": "error predicting label"})
     return {'status_code' : Code.OK, 'result': result, 'label' : label }
@@ -62,18 +74,6 @@ async def predict_input(request : Request):
     review = (req_json["review"], req_json["label"])
     result, label = learn.predict_review(review=review, model_type=req_json["model"])
     return {'status_code':Code.OK, 'result':result, 'label':label}
-    
-@app.get("/store-review")
-async def store_review(url=None):
-    if url is None:
-        raise HTTPException(Code.BAD_REQUEST, detail={"message":"url is required"})
-    values = db.get_review(url)
-    review_dict = dict(zip(KEYS, values))
-    review_dict['prediction'] = 'unknown'
-    if insert_review(FILE, **review_dict):
-        return {'status_code' : Code.OK, 'message': 'review stored to database!', 'result':review_dict}
-    else:
-        raise HTTPException(Code.BAD_REQUEST, detail={'message':'an error occurred.'})
     
 @app.get("/all-reviews")
 async def all_reviews():

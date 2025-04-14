@@ -52,7 +52,7 @@ def get_review(url) -> tuple | None:
         return (url, user, media_name, episode_name, score, review)
     except Exception as e:
         print(e)
-        return None
+        raise(e)
 
 # gets words of a specific review
 def get_words(review : str):

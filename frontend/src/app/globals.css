@@ -1,9 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, corporate;
+  
+  
 }
-
-
 @plugin "daisyui/theme" {
   name: "corporate";
   default: false;
@@ -40,6 +40,7 @@
 }
 
 
+/* header CSS */
 @utility heading1 {
   @apply font-sans font-bold text-4xl mt-8 text-center text-primary;
 }
@@ -59,8 +60,39 @@
 } 
 
 @utility navlist {
-  @apply list-none overflow-hidden bg-[#333] m-0 p-0; 
-  @apply grid grid-cols-5 w-full max-w-4xl mx-auto mt-4;
+  @apply list-none overflow-hidden bg-[#333] m-0 p-0 grid grid-cols-5 w-full max-w-4xl mx-auto mt-4;
+}
+
+/* main content */
+@utility bullet1 {
+  @apply font-sans font-bold text-4xl mt-8 text-left text-accent;
+  @apply w-full max-w-4xl mx-auto;
+}
+
+@utility selector {
+  @apply w-full max-w-4xl mx-auto flex bg-base-300 rounded-lg overflow-hidden;
+  @apply mt-3;
+}
+
+@utility text-input {
+  @apply w-1/2 text-center py-3 cursor-pointer font-bold text-neutral;
+  @apply bg-transparent peer-checked/text:bg-neutral peer-checked/text:text-white;
+  @apply transition-colors duration-200;
+}
+
+@utility imdb-link {
+  @apply w-1/2 text-center py-3 cursor-pointer font-bold text-warning;
+  @apply bg-transparent peer-checked/imdb:bg-warning peer-checked/imdb:text-black;
+  @apply transition-colors duration-200;
+}
+
+@utility paragraph {
+  @apply text-center items-center text-base text-left;
+  @apply w-full max-w-4xl mx-auto;
+}
+
+@utility code {
+  @apply bg-gray-300;
 }
 
 @utility btn {
