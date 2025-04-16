@@ -2,7 +2,7 @@
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, corporate;
   
-  
+
 }
 @plugin "daisyui/theme" {
   name: "corporate";
@@ -80,14 +80,49 @@
   @apply transition-colors duration-200;
 }
 
+/* imdb form */
 @utility imdb-link {
   @apply w-1/2 text-center py-3 cursor-pointer font-bold text-warning;
   @apply bg-transparent peer-checked/imdb:bg-warning peer-checked/imdb:text-black;
   @apply transition-colors duration-200;
 }
 
+@utility imdb-form {
+  @apply items-center justify-center mt-16;
+  @apply text-xl;
+  @apply w-full max-w-4xl mx-auto;
+}
+
+/* text-input form */
+@utility text-form {
+  @apply items-center justify-center mt-16;
+  @apply text-xl;
+  @apply w-full max-w-4xl mx-auto;
+}
+
+@utility rating-selector {
+  @apply w-1/3 max-w-4xl mx-auto flex bg-base-300 rounded-lg overflow-hidden;
+  @apply mt-3;
+}
+
+@utility negative-rating {
+  @apply w-1/2 text-center py-2 cursor-pointer font-bold text-red-600;
+  @apply bg-transparent peer-checked/negative:bg-red-600 peer-checked/negative:text-white;
+  @apply transition-colors duration-200;
+}
+
+@utility positive-rating {
+  @apply w-1/2 text-center py-2 cursor-pointer font-bold text-green-600;
+  @apply bg-transparent peer-checked/positive:bg-green-600 peer-checked/positive:text-black;
+  @apply transition-colors duration-200;
+}
+@utility form-heading {
+  @apply text-center items-center font-bold text-success mt-8 text-xl;
+  @apply w-full max-w-4xl mx-auto;
+}
+
 @utility paragraph {
-  @apply text-center items-center text-base text-left;
+  @apply items-center text-base text-left;
   @apply w-full max-w-4xl mx-auto;
 }
 
