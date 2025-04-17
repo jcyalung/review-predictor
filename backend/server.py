@@ -41,6 +41,7 @@ def store_review(url=None):
     
 @app.post("/predict-review")
 async def predict_review(request : Request):
+    print('predict review api called')
     req_json = await request.json()
     if "url" not in req_json:
         raise HTTPException(Code.BAD_REQUEST, detail={"message":"No url found!"})
@@ -48,14 +49,21 @@ async def predict_review(request : Request):
         raise HTTPException(Code.BAD_REQUEST, detail={"message":"Model not specified"})
     review = None
     try:
+        # review = retrieve_review(FILE, req_json["url"])
+        # if review is None:
+        #     review = db.get_review(req_json["url"])
+        #     review_dict = dict(zip(KEYS, review))
+        #     insert_review(FILE, **review_dict)
+        # print(review)
+
+        review = db.get_review(req_json["url"])
+        review_dict = dict(zip(KEYS, review))
+        insert_review(FILE, **review_dict)
         review = retrieve_review(FILE, req_json["url"])
-        if review is None:
-            review = db.get_review(req_json["url"])
-            review_dict = dict(zip(KEYS, review))
-            insert_review(FILE, **review_dict)
     except Exception as e:
+        print(e)
         raise HTTPException(Code.BAD_REQUEST, detail={"message":e.args})
-    review = review[-2:]
+    review = (review[6], review[4])
     result, label = learn.predict_review(review=review, model_type=req_json["model"])
     update_prediction(FILE, req_json["url"], result)
     if result is None:
