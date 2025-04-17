@@ -124,7 +124,7 @@ export default function Predictor() {
                 : 
                 <h2 className="text-xl font-bold mb-4 text-secondary">Prediction</h2> }
                   <p className="mb-6">{result === "" ? "Predicting..." : result["result"]}</p>
-                  <button className="btn btn-accent" onClick={() => { setModal(false); setResult(""); }}>Close</button>
+                  <button className="btn btn-accent" onClick={() => { setModal(false); setResult(""); setError(false); }}>Close</button>
                 </div>
               </div>
                 )}
