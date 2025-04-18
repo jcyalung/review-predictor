@@ -31,12 +31,20 @@ log_reg = LogisticRegression()
 
 models = {'nb': nb, 'svm': svm, 'log_reg': log_reg}
 
-
-# im dumb
-def process_data():
-    print('Processing data')
+def recorder(func):
+    def wrapper():
+        start_time = time.perf_counter()
+        output = func()
+        end_time = time.perf_counter()
+        execution = end_time - start_time
+        print(f'Time taken to run {func.__name__}: {execution:.4f} seconds')
+        return output
+    return wrapper
     
+
+
 def train_models():
+    start = time.perf_counter()
     global train_reviews, train_labels, test_reviews, test_labels
     global models, vectorizer
     scores = []
@@ -46,8 +54,9 @@ def train_models():
         model.fit(features_train, train_labels)
         preds = model.predict(features_test)
         scores.append((type, accuracy_score(preds, test_labels)))
-    print('Models Trained!')
-
+    end = time.perf_counter()
+    exec = end - start
+    print(f'Time taken to train models: {exec:.4f} seconds')
     return scores
 
 
@@ -55,11 +64,15 @@ def predict_review(review, model_type):
     try: 
         if not hasattr(vectorizer, 'vocabulary_'):
             train_models()
+        start = time.perf_counter()
         model = models[model_type]
         review, label = review
         review_vectorized = vectorizer.transform([review])
         
         result = model.predict(review_vectorized)[0]
+        end = time.perf_counter()
+        exec = end - start
+        print(f'Time taken to predict: {exec:.4f} seconds')
         return result, label
     except Exception as e:
         print(e)

@@ -5,6 +5,8 @@ models are trained from this [dataset](https://ai.stanford.edu/~amaas/data/senti
 
 ## running the code
 
+the backend requires these libraries, some already installed, most of which you can install using `pip`:
+``` fastapi uvicorn logging bs4 re requests numpy matplotlib sklearn ```
 to run the backend,
 run these two commands: <br>
 ```
