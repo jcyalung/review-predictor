@@ -41,7 +41,6 @@ def store_review(url=None):
     
 @app.post("/predict-review")
 async def predict_review(request : Request):
-    print('predict review api called')
     req_json = await request.json()
     if "url" not in req_json:
         raise HTTPException(Code.BAD_REQUEST, detail={"message":"No url found!"})
@@ -81,7 +80,7 @@ async def predict_input(request : Request):
         raise HTTPException(Code.BAD_REQUEST, detail={"message":"Score not specified"})
     review = (req_json["review"], req_json["label"])
     result, label = learn.predict_review(review=review, model_type=req_json["model"])
-    return {'status_code':Code.OK, 'result':result, 'label':label}
+    return {'status_code':Code.OK, 'result':result, 'label':label, 'input':req_json["review"]}
     
 @app.get("/all-reviews")
 async def all_reviews():

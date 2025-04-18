@@ -1,20 +1,21 @@
 "use client";
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
+import Result from "./result";
 export default function Predictor() {
     const API_LINK = "http://localhost:8000/"
     const [model, setModel] = useState("nb");
     const [type, setType] = useState(0);
     const [label, setLabel] = useState("positive");
     const [modal, setModal] = useState(false);
-    const [result, setResult] = useState("");
+    const [result, setResult] = useState(null);
     const [error, setError] = useState(false);
     // nb svm log_reg
     const handleSubmit = async (event) => {
         event.preventDefault();
         const payload = type === 0 ? {
             model: model,
-            input: event.currentTarget.input.value,
+            review: event.currentTarget.input.value,
             label: label,
         } :
         {
@@ -22,21 +23,21 @@ export default function Predictor() {
             url: event.currentTarget.url.value,
 
         }
-
-        console.log(payload);
-        setModal(true);
-        
+        setModal(true);        
         try {
-            const { data } = await axios.post(API_LINK + "predict-review", payload);
+            const { data } = type === 0 ? await axios.post(API_LINK + "predict-input", payload) : await axios.post(API_LINK + "predict-review", payload);
             console.log(data);
             setResult(data);
         } catch(e) {
-            const error = e;
-            const { message, response } = error;
-            const error_msg = response.data.detail.message[0];
-            setResult(error_msg);
+            const { message, response } = e;
             setError(true);
-            //alert(`${error.message}: ${error_msg}`);
+            if(message === "Network Error") {
+                setResult(({'error' : 'Backend is down, please check if the backend is running!'}));
+            }
+            else {
+                const error_msg = response.data.detail.message[0];
+                setResult({'error' : error_msg});
+            }
         }
     }
     return (
@@ -116,20 +117,28 @@ export default function Predictor() {
                     </div>
                     <button className="btn btn-accent mt-8">Submit</button>
                 </form>
-                {modal && (
-                <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
-                <div className="bg-white dark:bg-neutral p-6 rounded-2xl shadow-lg w-full max-w-md text-center transform scale-95 animate-fade-in-up">
-                {error ? 
-                <h2 className="text-xl font-bold mb-4 text-error">An error occurred!</h2>
-                : 
-                <h2 className="text-xl font-bold mb-4 text-secondary">Prediction</h2> }
-                  <p className="mb-6">{result === "" ? "Predicting..." : result["result"]}</p>
-                  <button className="btn btn-accent" onClick={() => { setModal(false); setResult(""); setError(false); }}>Close</button>
-                </div>
-              </div>
-                )}
             </>
             )}
+            {modal && (
+                <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300">
+                <div className="bg-white dark:bg-neutral p-6 rounded-2xl shadow-lg w-full max-w-md text-center transform scale-95 animate-fade-in-up">
+                    {error ? 
+                    <h2 className="text-xl font-bold mb-4 text-error">An error occurred!</h2>
+                    : 
+                    <h2 className="text-xl font-bold mb-4 text-secondary">Prediction</h2> }
+                    {result ? 
+                    <Result props={result}/>
+                    : 
+                    <p className="mb-6"> Predicting... </p>
+                    }
+                    <button 
+                        className="btn btn-accent" 
+                        onClick={() => { setModal(false); setResult(""); setError(false); }}
+                        >Close
+                    </button>
+                </div>
+                </div>
+                )}
         </div>
     )
 }

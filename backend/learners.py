@@ -52,9 +52,6 @@ def train_models():
 
 
 def predict_review(review, model_type):
-    if train_reviews is None or train_labels is None \
-        or test_reviews is None or test_labels is None:
-        process_data()
     try: 
         if not hasattr(vectorizer, 'vocabulary_'):
             train_models()
