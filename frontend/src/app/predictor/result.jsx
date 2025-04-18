@@ -16,7 +16,7 @@ export default function Result({props}) {
             :
             <p className="text-error text-xl font-bold mt-2">{"No :("}</p>
             }
-            { input ? null : <p className="text-accent mt-2 mb-6"><b>Review saved to database.</b></p>}
+            { input ? null : <p className="text-accent mt-2"><b>Review saved to database.</b></p>}
             </>
         )
 

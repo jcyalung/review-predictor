@@ -60,12 +60,17 @@
 } 
 
 @utility navlist {
-  @apply list-none overflow-hidden bg-[#333] m-0 p-0 grid grid-cols-5 w-full max-w-4xl mx-auto mt-4;
+  @apply list-none overflow-hidden bg-[#333] m-0 p-0 grid grid-cols-5 w-full max-w-6xl mx-auto mt-4;
 }
 
 /* main content */
 @utility bullet1 {
   @apply font-sans font-bold text-4xl mt-8 text-left text-accent;
+  @apply w-full max-w-4xl mx-auto;
+}
+
+@utility bullet2 {
+  @apply font-sans font-bold text-4xl mt-8 text-center text-accent;
   @apply w-full max-w-4xl mx-auto;
 }
 

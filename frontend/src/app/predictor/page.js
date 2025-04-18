@@ -2,8 +2,8 @@
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import Result from "./result";
+import { API_LINK } from "../enums";
 export default function Predictor() {
-    const API_LINK = "http://localhost:8000/"
     const [model, setModel] = useState("nb");
     const [type, setType] = useState(0);
     const [label, setLabel] = useState("positive");
@@ -26,7 +26,6 @@ export default function Predictor() {
         setModal(true);        
         try {
             const { data } = type === 0 ? await axios.post(API_LINK + "predict-input", payload) : await axios.post(API_LINK + "predict-review", payload);
-            console.log(data);
             setResult(data);
         } catch(e) {
             const { message, response } = e;
@@ -132,7 +131,7 @@ export default function Predictor() {
                     <p className="mb-6"> Predicting... </p>
                     }
                     <button 
-                        className="btn btn-accent" 
+                        className="btn btn-accent mt-6" 
                         onClick={() => { setModal(false); setResult(""); setError(false); }}
                         >Close
                     </button>
