@@ -110,15 +110,15 @@ async def recent_reviews(count = 5):
     reviews = list_reviews(FILE)
     reviews = [
         {
-            'link': link,
-            'user': user,
-            'media_name': media_name,
-            'episode_name': episode_name,
-            'score': score,
-            'prediction': prediction,
-            'review': text,
-            'timestamp': timestamp,
-            'id': review_id
+            'link':             link,
+            'user':             user,
+            'media_name':       media_name,
+            'episode_name':     episode_name,
+            'score':            score,
+            'prediction':       prediction,
+            'review':           text,
+            'timestamp':        timestamp,
+            'id':               review_id
         }
         for link, user, media_name, episode_name, score, prediction, text, timestamp, review_id in reviews
     ]
@@ -126,6 +126,18 @@ async def recent_reviews(count = 5):
     reviews = sorted(reviews, key=lambda x: x['timestamp'], reverse=True)
     return {'status_code' : Code.OK, 'count' : count, 'reviews' : reviews[:count]}
     
+    
+@app.get("/statistics")
+async def statistics():
+    reviews = list_reviews(FILE)
+    true = []
+    pred = []
+    for review in reviews:
+        true.append(review[4])
+        pred.append(review[5])
+    img = learn.matrix(true, pred)
+    return {'image': img}
+
 @app.get("/logging-levels")
 def logging_levels():
     logging.error("error message")

@@ -19,7 +19,6 @@ export default function RecentPage() {
     });
 
     const toggleSort = () => setSort((prev) => !prev);
-    console.log(reviews);
     return (
         <div className="recent">
             <h1 className='bullet2'>Recent Reviews</h1>

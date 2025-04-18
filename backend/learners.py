@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import dataset as db
 from sqlite_helpers import imdb_reviews
 import time
+import io
+import base64
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.linear_model import LogisticRegression, LinearRegression
@@ -78,7 +80,24 @@ def predict_review(review, model_type):
         print(e)
         return None, None
 
-
+def matrix(true, pred):
+    conf = confusion_matrix(true, pred)
+    plt.figure(figsize=(5,4))
+    plt.title('Confusion Matrix for Predictions')
+    plt.xlabel('Predicted Labels')
+    plt.ylabel('Actual Labels')
+    plt.imshow(conf, interpolation='nearest', cmap='Blues') 
+    for i in range(conf.shape[0]):
+        for j in range(conf.shape[1]):
+            plt.text(j, i, str(conf[i, j]), ha='center', va='center', color='black')
+    plt.colorbar()        
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    plt.close()
+    buf.seek(0)
+    img = base64.b64encode(buf.read()).decode('utf-8')
+    return img
+    
 if '__main__' == __name__:
     start = time.perf_counter()
     train_models()
