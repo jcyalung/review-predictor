@@ -136,7 +136,13 @@ async def statistics():
         true.append(review[4])
         pred.append(review[5])
     img = learn.matrix(true, pred)
-    return {'image': img}
+    len_reviews = len(true)
+    correct = 0
+    for y, y_pred in zip(true, pred):
+        if y == y_pred:
+            correct += 1
+    stats = {'num_reviews' : len_reviews, 'correct' : correct, 'accuracy' : correct / len_reviews}
+    return { 'image' : img, 'statistics': stats }
 
 @app.get("/logging-levels")
 def logging_levels():

@@ -37,7 +37,7 @@ export default function RecentPage() {
                 <tbody>
                     {sortedReviews.map((row, i) => (
                         <tr className="bg-base-200 hover:bg-base-600 border-b-4 border-base-200" key={i}>
-                            <td><a className="underline text-info" href={row.link}>{row.user}</a></td>
+                            <td><a className="underline text-info" href={row.link} target="_blank">{row.user}</a></td>
                             <td>{row.media_name}</td>
                             <td>{row.episode_name || "N/A"}</td>
                             {row.score === "positive" ? <td className="text-success font-bold">positive</td> : <td className="text-error font-bold">negative</td>} 

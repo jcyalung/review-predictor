@@ -13,7 +13,7 @@ export default function About() {
                 <br />
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 The dataset used to train each model is adapted from Andrew Maas' Large Movie Review Dataset. 
-                You can download the dataset <a className="text-initial text-primary underline" href="https://ai.stanford.edu/~amaas/data/sentiment/">here.</a> With this dataset, 
+                You can download the dataset <a target="_blank" className="text-initial text-primary underline" href="https://ai.stanford.edu/~amaas/data/sentiment/">here.</a> With this dataset, 
                 the words of the review are processed using an TF-IDF Vectorizer, with parameters <code className="code">max_df=0.95</code>, <code className="code">min_df=2</code>, and <code className="code">ngram_range=(1,3)</code>.
             </p>
         </div>

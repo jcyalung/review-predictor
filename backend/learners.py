@@ -82,7 +82,7 @@ def predict_review(review, model_type):
 
 def matrix(true, pred):
     conf = confusion_matrix(true, pred)
-    plt.figure(figsize=(5,4))
+    plt.figure(figsize=(6,4))
     plt.title('Confusion Matrix for Predictions')
     plt.xlabel('Predicted Labels')
     plt.ylabel('Actual Labels')
