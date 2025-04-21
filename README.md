@@ -3,10 +3,12 @@
 predict imdb movie reviews given IMDB links or user input.
 models are trained from this [dataset](https://ai.stanford.edu/~amaas/data/sentiment/) by Andrew Maas. 
 
-## running the code
+## required libraries
 
 the backend requires these libraries, some already installed, most of which you can install using `pip`: <br>
 ``` fastapi uvicorn logging bs4 re requests numpy matplotlib sklearn ``` <br>
+
+## execution
 to run the backend,
 run these two commands: <br>
 ```
