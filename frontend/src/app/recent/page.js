@@ -16,7 +16,7 @@ export default function RecentPage() {
         if (a.media_name < b.media_name) return sort ? -1 : 1;
         if (a.media_name > b.media_name) return sort ? 1 : -1;
         return 0;
-    });
+    }); 
 
     const toggleSort = () => setSort((prev) => !prev);
     return (

@@ -1,7 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
 const routes = ['about', 
-                'home', 
                 'predictor',
                 'recent',
                 'statistics'];
@@ -10,8 +9,8 @@ export default function Header() {
   const active = pathname?.split('/')[1].toLowerCase() || 'home';
     return (
     <div className="header-center">
-      <h1 className="heading1">IMDB Movie Predictor</h1>
-      <h2 className="heading2">Predict movie ratings based on written IMDB reviews</h2>
+      <h1 className="heading1">Senti-IMDB</h1>
+      <h2 className="heading2">Predict movie rating sentiment based on written IMDB reviews</h2>
       <ul className="navlist">
         {routes.map((route, index) => {
           return (
